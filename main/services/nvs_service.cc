@@ -3,7 +3,7 @@
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "esp_lib_utils.h"
-#include "nvs_service.h"
+#include "nvs_service.hpp"
 
 #define STORAGE_NVS_PARTITION_NAME          NVS_DEFAULT_PART_NAME
 #define STORAGE_NVS_NAMESPACE               "storage"

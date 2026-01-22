@@ -1,4 +1,5 @@
-#include "nvs_service.h"
+#include "modules/bsp/service.hpp"
+#include "modules/bsp/display.hpp"
 #include "boost/thread.hpp"
 #include "bsp/esp-bsp.h"
 
@@ -10,7 +11,9 @@
 
 extern "C" void app_main()
 {
-    NVSservice::requestInstance().begin();
+
+    services_init();
+    display_init(true);
 
     boost::thread t([]() {
         while (true) {

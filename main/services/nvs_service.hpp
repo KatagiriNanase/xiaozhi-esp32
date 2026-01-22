@@ -13,6 +13,13 @@ constexpr size_t NVS_VALUE_STR_MAX_LEN = 128;
 
 class NVSservice {
 public:
+
+    static constexpr const char* SETTINGS_VOLUME = "volume";
+    static constexpr const char* SETTINGS_BRIGHTNESS = "brightness";
+    static constexpr const char* SETTINGS_WLAN_SWITCH = "wlan_switch";
+    static constexpr const char* SETTINGS_WLAN_SSID = "wlan_ssid";
+    static constexpr const char* SETTINGS_WLAN_PASSWORD = "wlan_password";
+
     using Key = std::string;
     using Value = std::variant<int, std::string>;
 
