@@ -38,8 +38,6 @@ set(SOURCES "audio/audio_codec.cc"
             # "main.cc"
             "main_test.cc"
 
-            # brookesia
-            "services/nvs_service.cc"
             )
 
 set(INCLUDE_DIRS "." "display" "display/lvgl_display" "display/lvgl_display/jpg" "audio" "protocols")
@@ -50,10 +48,24 @@ list(APPEND SOURCES ${BOARD_COMMON_SOURCES})
 # Add modules files
 file(GLOB_RECURSE MODULES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/modules/*.cc)
 list(APPEND SOURCES ${MODULES_SOURCES})
+# Add service files
+file(GLOB_RECURSE SERVICE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/services/*.cc)
+list(APPEND SOURCES ${SERVICE_SOURCES})
+# Add apps files
+file(GLOB_RECURSE APP_RESOUCES ${CMAKE_CURRENT_SOURCE_DIR}/apps/*.cc)
+list(APPEND SOURCES ${APP_RESOUCES})
 # Add include 
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/services)
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/modules)
+# Get all first-level subdirectories under the apps directory
+file(GLOB APP_SUBDIRS LIST_DIRECTORIES true "${CMAKE_CURRENT_SOURCE_DIR}/apps/*")
+# Iterate through these subdirectories and add them all to INCLUDE_DIRS
+foreach(SUBDIR ${APP_SUBDIRS})
+    if(IS_DIRECTORY ${SUBDIR})
+        list(APPEND INCLUDE_DIRS ${SUBDIR})
+    endif()
+endforeach()
 
 idf_build_get_property(build_components BUILD_COMPONENTS)
 # Function to find component dynamically by pattern
