@@ -58,10 +58,11 @@ list(APPEND SOURCES ${APP_RESOUCES})
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/services)
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/modules)
-# Get all first-level subdirectories under the apps directory
-file(GLOB APP_SUBDIRS LIST_DIRECTORIES true "${CMAKE_CURRENT_SOURCE_DIR}/apps/*")
-# Iterate through these subdirectories and add them all to INCLUDE_DIRS
-foreach(SUBDIR ${APP_SUBDIRS})
+list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/apps)
+# Recursively collect all subdirectories under the app directory
+file(GLOB_RECURSE ALL_APP_SUBDIRS LIST_DIRECTORIES true "${CMAKE_CURRENT_SOURCE_DIR}/apps/*")
+# Filter out directories and add them to INCLUDE_DIRS
+foreach(SUBDIR ${ALL_APP_SUBDIRS})
     if(IS_DIRECTORY ${SUBDIR})
         list(APPEND INCLUDE_DIRS ${SUBDIR})
     endif()
