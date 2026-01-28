@@ -22,11 +22,11 @@ public:
     Event& operator=(const Event&) = delete;
     Event& operator=(Event&&) = delete;
 
-    boost::signals2::connection connectEventSignal(void* obj, EventSignal::slot_type slot_fun);
+    boost::signals2::connection registerEvent(lv_obj_t* obj, EventSignal::slot_type slot_fun);
 
-    void sendEvent(void* obj, lv_event_t* e);
+    void sendEvent(lv_obj_t* obj, lv_event_t* e);
 
-    void unregisterEvent(void* obj);
+    void unregisterEvent(lv_obj_t* obj);
 private:
-    std::unordered_map<void*, EventSignal> event_map_;
+    std::unordered_map<lv_obj_t*, EventSignal> event_map_;
 };

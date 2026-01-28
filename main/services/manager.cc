@@ -18,8 +18,8 @@ bool Manager::installApp(std::unique_ptr<App> app, int& ret_id)
     app->id_ = new_id;
     app->_system_context = &Context::requestInstance();
 
-    app->OnCreate();
-    ESP_UTILS_LOGI("install App[%d]:%s", new_id, app->GetAppName().c_str());
+    app->onCreate();
+    ESP_UTILS_LOGI("install App[%d]:%s", new_id, app->getAppName().c_str());
 
     app_map_[new_id] = std::move(app);
     ret_id = new_id;
@@ -42,14 +42,15 @@ bool Manager::launchApp(int id)
 
     // 停止当前App（如果存在）
     if (current_app_ != nullptr) {
-        current_app_->OnPause();
+        current_app_->onPause();
     }
 
     // 切换App
     current_app_ = it->second.get();
-    current_app_id_ = current_app_->GetAppId();
-    current_app_->OnResume();
-    ESP_UTILS_LOGI("Launch App[%d]:%s", current_app_id_, current_app_->GetAppName());
+    current_app_id_ = current_app_->getAppId();
+    current_app_->onResume();
+    
+    ESP_UTILS_LOGI("Launch App[%d]:%s", current_app_id_, current_app_->getAppName());
     return true;
 }
 
