@@ -18,15 +18,16 @@ public:
     App& operator=(App&&) = delete;
 
     // Lifecycle methods
-    virtual void OnCreate() = 0;
-    virtual void OnResume() = 0;
-    virtual void OnPause() = 0;
-    virtual void OnDestroy() {}
+    virtual void onCreate() = 0;
+    virtual void onResume() = 0;
+    virtual void onPause() = 0;
+    virtual void onDestroy() {}
 
     // App metadata
-    virtual int GetAppId() const { return id_; };
-    virtual std::string GetAppName() const = 0;
-    virtual const lv_img_dsc_t* GetAppIcon() const = 0;  // Font Awesome icon
+    virtual int getAppId() const { return id_; };
+    virtual std::string getAppName() const = 0;
+    virtual const lv_img_dsc_t* getAppIcon() const = 0;  // Font Awesome icon
+    virtual lv_obj_t* getObj() = 0;
 
 protected:
     int id_;
