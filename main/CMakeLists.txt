@@ -53,7 +53,12 @@ file(GLOB_RECURSE SERVICE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/services/*.cc)
 list(APPEND SOURCES ${SERVICE_SOURCES})
 # Add apps files
 file(GLOB_RECURSE APP_RESOUCES ${CMAKE_CURRENT_SOURCE_DIR}/apps/*.cc)
+# Exclude squareline directory files from compilation
+list(FILTER APP_RESOUCES EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/apps/setting_app/squareline/.*\\.cc$")
 list(APPEND SOURCES ${APP_RESOUCES})
+# Add SquareLine generated asset files (.c files)
+file(GLOB_RECURSE APP_ASSETS ${CMAKE_CURRENT_SOURCE_DIR}/apps/setting_app/assets/*.c)
+list(APPEND SOURCES ${APP_ASSETS})
 # Add include 
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
 list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/services)
@@ -64,7 +69,10 @@ file(GLOB_RECURSE ALL_APP_SUBDIRS LIST_DIRECTORIES true "${CMAKE_CURRENT_SOURCE_
 # Filter out directories and add them to INCLUDE_DIRS
 foreach(SUBDIR ${ALL_APP_SUBDIRS})
     if(IS_DIRECTORY ${SUBDIR})
-        list(APPEND INCLUDE_DIRS ${SUBDIR})
+        # Exclude squareline directory from include paths
+        if(NOT ${SUBDIR} MATCHES "squareline")
+            list(APPEND INCLUDE_DIRS ${SUBDIR})
+        endif()
     endif()
 endforeach()
 
