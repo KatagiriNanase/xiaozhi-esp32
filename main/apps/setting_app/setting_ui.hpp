@@ -2,7 +2,9 @@
 #include <lvgl.h>
 
 #include "screens/settings.hpp"
+#include "screens/sound.hpp"
 
+class SettingManager;
 
 class SettingUI {
 public:
@@ -10,7 +12,9 @@ public:
     void del();
     lv_obj_t* getObj() { return main_screen_; };
 private:
+    friend class SettingManager;
     lv_obj_t* main_screen_ = nullptr;
     lv_obj_t* btn_ = nullptr;
     ScreenSettings screen_settings_;
+    ScreenSound screen_sound_;
 };

@@ -56,46 +56,44 @@ void ScreenSettings::setupMain(lv_obj_t* parent)
 
 }
 
+Cell* ScreenSettings::getCell(ScreenSettingsContIndex cont_index, ScreenSettingsCellIndex cell_key)
+{
+    auto it = container_map_.find(static_cast<int>(cont_index));
+    if (it == container_map_.end()) {
+        ESP_UTILS_LOGE("container[%d] not exist!");
+        return nullptr;
+    }
+    return it->second->getCellbyIndex(static_cast<int>(cell_key));
+}
+
 void ScreenSettings::setupWireless()
 {
-    auto wireless = std::make_unique<CellContainer>();
-    wireless->setup(cont_obj_);
-    wireless->setTitle("Wireless");
-
+    auto* wireless = addContainer(static_cast<int>(ScreenSettingsContIndex::WIRELESS), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "Wireless"));
     // wlan
     auto cell_element = SCREEN_SETTINGS_CELL_CONFIG() | CellElement::RIGHT_MAIN_LABEL;
-    auto* wlan_cell = wireless->addCell(cell_element);
+    auto* wlan_cell = wireless->addCell(static_cast<int>(ScreenSettingsCellIndex::WLAN), cell_element);
     wlan_cell->update(SCREEN_SETTINGS_WLAN_CELL_DATA_CONFIG());
-
-    container_map_[ScreenSettingsContIndex::WIRELESS] = std::move(wireless);
 }
 
 void ScreenSettings::setupMedia()
 {
-    auto media = std::make_unique<CellContainer>();
-    media->setup(cont_obj_);
-    media->setTitle("Media");
-
+    auto* media = addContainer(static_cast<int>(ScreenSettingsContIndex::MEDIA), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "Media"));
     // sound
-    auto* sound_cell = media->addCell(SCREEN_SETTINGS_CELL_CONFIG());
+    auto* sound_cell = media->addCell(static_cast<int>(ScreenSettingsCellIndex::SOUND), SCREEN_SETTINGS_CELL_CONFIG());
     sound_cell->update(SCREEN_SETTINGS_SOUND_CELL_DATA_CONFIG());
 
     // display
-    auto* display_cell = media->addCell(SCREEN_SETTINGS_CELL_CONFIG());
+    auto* display_cell = media->addCell(static_cast<int>(ScreenSettingsCellIndex::DISPLAY), SCREEN_SETTINGS_CELL_CONFIG());
     display_cell->update(SCREEN_SETTINGS_DISPLAY_CELL_DATA_CONFIG());
 
-    container_map_[ScreenSettingsContIndex::MEDIA] = std::move(media);
 }
 
 void ScreenSettings::setupAbout()
 {
-    auto about = std::make_unique<CellContainer>();
-    about->setup(cont_obj_);
-    about->setTitle("About");
-    auto* more_cell = about->addCell(SCREEN_SETTINGS_CELL_CONFIG());
+    auto* about = addContainer(static_cast<int>(ScreenSettingsContIndex::MORE), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "about"));
+    auto* more_cell = about->addCell(static_cast<int>(ScreenSettingsCellIndex::ABOUT), SCREEN_SETTINGS_CELL_CONFIG());
     more_cell->update(SCREEN_SETTINGS_MORE_CELL_DATA_CONFIG());
 
-    container_map_[ScreenSettingsContIndex::MORE] = std::move(about);
 }
 
 

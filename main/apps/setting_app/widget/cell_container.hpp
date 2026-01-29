@@ -2,11 +2,21 @@
 
 #include <string>
 #include <array>
-#include <vector>
 #include <memory>
+#include <list>
+#include <map>
+#include <utility>
 #include <type_traits>
 
 #include <lvgl.h>
+
+#define CELLCONTAINER_DEFAULT_CONFIG(parent_param, title_param) \
+    ( \
+        CellContainer::Config{ \
+            .parent = parent_param,     \
+            .title = title_param        \
+        } \
+    )
 
 enum class CellElement :uint32_t {
     MAIN = 0,
@@ -45,6 +55,10 @@ struct CellConf {
 
     // slider
     int slider_value = 0;
+
+    struct {
+        uint8_t enable_click : 1 = 1;
+    }flag;
 };
 
 inline CellElement operator|(CellElement l, CellElement r)
@@ -66,55 +80,53 @@ public:
     ~Cell();
 
     void setup(lv_obj_t* parent);
-    void setupLeftArea();
-    void setupCenterArea();
-    void setupRightArea();
+    void setupLeftArea(lv_obj_t* parent);
+    void setupCenterArea(lv_obj_t* parent);
+    void setupRightArea(lv_obj_t* parent);
     void update(const CellConf& cell_conf);
     void setSplitLineVisible(bool visible);
+    lv_obj_t* getElementObj(CellElement cell_element);
     lv_obj_t* getObj(void);
 
 private:
 
     static void onCellTouch(lv_event_t* e);
     CellElement layout_mask_;
-
-    // container
-    lv_obj_t* main_obj_ = nullptr;
-    lv_obj_t* left_obj_ = nullptr;
-    // lv_obj_t* center_obj_ = nullptr;
-    lv_obj_t* right_obj_ = nullptr;
-
-    // widget
-    lv_obj_t* left_icon_obj_ = nullptr;
-    lv_obj_t* left_main_label_ = nullptr;
-    lv_obj_t* left_minor_label_ = nullptr;
-    lv_obj_t* right_switch_ = nullptr;
-    lv_obj_t* right_icon_obj_ = nullptr;
-    lv_obj_t* right_main_label_ = nullptr;
-    lv_obj_t* right_minor_label_ = nullptr;
-    lv_obj_t* center_slider_ = nullptr;
+    lv_obj_t* main_obj_;
     lv_obj_t* split_line_ = nullptr;
     std::array<lv_point_precise_t, 2> split_line_points_ = { {
         {40, 0},
         {260, 0}
     } };
+    std::map<CellElement, lv_obj_t*> element_map_;
 };
 
 class CellContainer {
 public:
-    CellContainer() = default;
+
+    struct Config {
+        lv_obj_t* parent;
+        std::string title;
+    };
+
+
+
+    CellContainer(const Config&);
     ~CellContainer();
 
-    void setup(lv_obj_t* parent);
-    void setTitle(const char* title);
+
     void clear() { cells_.clear(); }
-    Cell* addCell(CellElement layout);
+    Cell* addCell(int key, CellElement layout);
     int getCellIndex(lv_obj_t* obj) const;
+    Cell* getCellbyIndex(int key) const;
     size_t getCellCount() const { return cells_.size(); }
 
 private:
+    void setup(lv_obj_t* parent);
+    void setTitle(const char* title);
+
     lv_obj_t* main_obj_ = nullptr;
     lv_obj_t* title_label_ = nullptr;
     lv_obj_t* cont_obj_ = nullptr;
-    std::vector<std::unique_ptr<Cell>> cells_;
+    std::list < std::pair<int, std::unique_ptr<Cell>>> cells_;
 };

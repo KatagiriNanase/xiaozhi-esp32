@@ -12,7 +12,8 @@ public:
     enum class ScreenSettingsContIndex {
         WIRELESS,
         MEDIA,
-        MORE
+        MORE,
+        MAX
     };
 
     enum class ScreenSettingsCellIndex {
@@ -20,12 +21,12 @@ public:
         SOUND,
         DISPLAY,
         ABOUT,
+        MAX
     };
     void setupMain(lv_obj_t* parent = nullptr) override;
+    Cell* getCell(ScreenSettingsContIndex cont_index, ScreenSettingsCellIndex cell_key);
 private:
     void setupWireless();
     void setupMedia();
     void setupAbout();
-
-    std::map<ScreenSettingsContIndex, std::unique_ptr<CellContainer>> container_map_;
 };

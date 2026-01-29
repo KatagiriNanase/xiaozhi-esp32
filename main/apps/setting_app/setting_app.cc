@@ -24,6 +24,8 @@ void SettingApp::onResume()
     ui_.setup();
     
     // 独立线程加锁
+    manager_.init();
+    manager_.run();
 
 }
 

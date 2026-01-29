@@ -39,6 +39,17 @@ void ScreenBase::del()
 
 }
 
+lv_obj_t* ScreenBase::getElementObj(int cont_key, int cell_key, CellElement cell_element)
+{
+    auto container_it = container_map_.find(cont_key);
+    ESP_UTILS_CHECK_FALSE_RETURN(container_it != container_map_.end(), nullptr, "Find container[%d] failed", cont_key);
+
+    auto* cell = container_it->second->getCellbyIndex(cell_key);
+    ESP_UTILS_CHECK_NULL_RETURN(cell, nullptr, "Find cell[%d] failed", cell_key);
+
+    return cell->getElementObj(cell_element);
+}
+
 void ScreenBase::setupHeader(std::string title)
 {
     ESP_UTILS_CHECK_NULL_EXIT(main_obj_, "main_obj is null");
@@ -82,4 +93,17 @@ void ScreenBase::setupCont()
     lv_obj_add_flag(cont_obj_, LV_OBJ_FLAG_SCROLLABLE);
     // 保留滚动条   
     // lv_obj_set_scrollbar_mode(cont_obj_, LV_SCROLLBAR_MODE_OFF);
+}
+
+CellContainer* ScreenBase::addContainer(int key, const CellContainer::Config& config)
+{
+    auto container = std::make_unique<CellContainer>(config);
+    if (container_map_.find(key) == container_map_.end()) {
+        auto* container_ptr = container.get();
+        container_map_[key] = std::move(container);
+        ESP_UTILS_LOGI("Add container[%d]", key);
+        return container_ptr;
+    }
+    ESP_UTILS_LOGE("container[%d] already exists!", key);
+    return nullptr;
 }
