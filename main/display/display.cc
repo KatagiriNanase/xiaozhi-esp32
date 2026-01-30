@@ -11,6 +11,7 @@
 #include "audio_codec.h"
 #include "settings.h"
 #include "assets/lang_config.h"
+#include "display.hpp"
 
 #define TAG "Display"
 

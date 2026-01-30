@@ -1,20 +1,19 @@
 #pragma once
 #include "base.hpp"
 
-class ScreenSound :public ScreenBase {
+class ScreenDisplay :public ScreenBase {
 public:
-
     enum class ContainerIndex {
-        VOLUME,
+        BRIGHTNESS,
         MAX
     };
 
     enum class CellIndex {
-        VOLUME_SLIDER,
+        BRIGHTNESS_SLIDER,
         MAX
     };
 
     void setupMain(lv_obj_t* parent = nullptr) override;
 private:
-    void setupVolume();
+    void setupBrightness();
 };

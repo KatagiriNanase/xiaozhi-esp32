@@ -16,9 +16,7 @@
         .left_icon= &app_icon_sound_less_48_48,\
         .left_main_text= "Sound",\
         .right_icon= &app_icon_sound_more_48_48,\
-        .flag={\
-            .enable_click=0\
-        }\
+        .type=CellType::VALUE \
     }
 
 void ScreenSound::setupMain(lv_obj_t* parent)
@@ -33,9 +31,14 @@ void ScreenSound::setupMain(lv_obj_t* parent)
 
 void ScreenSound::setupVolume()
 {
-    auto* volume = addContainer(static_cast<int>(ScreenSoundContainerIndex::VOLUME), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "Volume"));
+    auto* volume = addContainer(static_cast<int>(ContainerIndex::VOLUME), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "Volume"));
 
-    auto* volume_cell = volume->addCell(static_cast<int>(ScreenSoundCellIndex::VOLUME_SLIDER), SCREEN_SOUND_CELL_CONFIG());
+    auto* volume_cell = volume->addCell(static_cast<int>(CellIndex::VOLUME_SLIDER), SCREEN_SOUND_CELL_CONFIG());
     volume_cell->update(SCREEN_SOUND_VOLUME_CELL_DATA_CONFIG());
-
 }
+
+template<>
+Cell* ScreenBase::getCell<ScreenSound::ContainerIndex, ScreenSound::CellIndex>(
+    ScreenSound::ContainerIndex,
+    ScreenSound::CellIndex
+);
