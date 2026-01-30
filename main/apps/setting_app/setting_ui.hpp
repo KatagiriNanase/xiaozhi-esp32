@@ -3,6 +3,7 @@
 
 #include "screens/settings.hpp"
 #include "screens/sound.hpp"
+#include "screens/display.hpp"
 
 class SettingManager;
 
@@ -17,4 +18,5 @@ private:
     lv_obj_t* btn_ = nullptr;
     ScreenSettings screen_settings_;
     ScreenSound screen_sound_;
+    ScreenDisplay screen_display_;
 };

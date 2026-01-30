@@ -13,6 +13,7 @@ void SettingUI::setup()
 {
     screen_settings_.setupMain();
     screen_sound_.setupMain();
+    screen_display_.setupMain();
     main_screen_ = screen_settings_.getObj();
     lv_obj_center(main_screen_);
     lv_scr_load(main_screen_);
