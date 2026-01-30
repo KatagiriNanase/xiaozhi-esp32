@@ -12,7 +12,15 @@
 
 class Event {
 public:
-    using EventSignal = boost::signals2::signal<void(lv_event_t*)>;
+
+    enum class Id {
+        ENTER,
+        BACK,
+        VALUECHANGE,
+        MAX
+    };
+
+    using EventSignal = boost::signals2::signal<void(void*)>;
 
     Event() = default;
     ~Event() = default;
@@ -22,11 +30,10 @@ public:
     Event& operator=(const Event&) = delete;
     Event& operator=(Event&&) = delete;
 
-    boost::signals2::connection registerEvent(lv_obj_t* obj, EventSignal::slot_type slot_fun);
+    boost::signals2::connection subscribe(Id event_id, EventSignal::slot_type slot_fun);
+    void publish(Id event_id, void* data = nullptr);
 
-    void sendEvent(lv_obj_t* obj, lv_event_t* e);
 
-    void unregisterEvent(lv_obj_t* obj);
 private:
-    std::unordered_map<lv_obj_t*, EventSignal> event_map_;
+    std::unordered_map<Id, EventSignal> event_map_;
 };
