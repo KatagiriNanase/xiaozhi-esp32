@@ -7,7 +7,6 @@
 #include <map>
 #include <utility>
 #include <type_traits>
-
 #include <lvgl.h>
 
 #define CELLCONTAINER_DEFAULT_CONFIG(parent_param, title_param) \
@@ -40,6 +39,12 @@ enum class CellElement :uint32_t {
     CENTER_SLIDER = (1U << 12)
 };
 
+enum CellType {
+    ENTER,
+    VALUE,
+    MAX
+};
+
 struct CellConf {
     // left area
     const lv_img_dsc_t* left_icon = nullptr;
@@ -56,9 +61,7 @@ struct CellConf {
     // slider
     int slider_value = 0;
 
-    struct {
-        uint8_t enable_click : 1 = 1;
-    }flag;
+    CellType type;
 };
 
 inline CellElement operator|(CellElement l, CellElement r)
@@ -72,6 +75,7 @@ inline bool operator&(CellElement l, CellElement r)
         static_cast<std::underlying_type<CellElement>::type>(l) & static_cast<std::underlying_type<CellElement>::type>(r)
         );
 }
+
 
 class Cell {
 public:
@@ -87,6 +91,8 @@ public:
     void setSplitLineVisible(bool visible);
     lv_obj_t* getElementObj(CellElement cell_element);
     lv_obj_t* getObj(void);
+    int getVal(void) { return val_; }
+    CellType getType(void) { return type_; }
 
 private:
 
@@ -94,6 +100,8 @@ private:
     CellElement layout_mask_;
     lv_obj_t* main_obj_;
     lv_obj_t* split_line_ = nullptr;
+    CellType type_;
+    int val_;
     std::array<lv_point_precise_t, 2> split_line_points_ = { {
         {40, 0},
         {260, 0}
@@ -109,11 +117,8 @@ public:
         std::string title;
     };
 
-
-
     CellContainer(const Config&);
     ~CellContainer();
-
 
     void clear() { cells_.clear(); }
     Cell* addCell(int key, CellElement layout);
