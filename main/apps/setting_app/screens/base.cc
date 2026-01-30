@@ -1,12 +1,9 @@
 #include "base.hpp"
+#include "services/context.hpp"
 #include "setting_app_assets.h"
+
 #include <lvgl.h>
 
-#include "esp_lib_utils.h"
-#ifdef ESP_UTILS_LOG_TAG
-#   undef ESP_UTILS_LOG_TAG
-#endif
-#define ESP_UTILS_LOG_TAG "base"
 
 #define HEADER_OBJ_HEIGHT 60
 
@@ -50,6 +47,13 @@ lv_obj_t* ScreenBase::getElementObj(int cont_key, int cell_key, CellElement cell
     return cell->getElementObj(cell_element);
 }
 
+void ScreenBase::onHeaderTouch(lv_event_t* e)
+{
+    auto* obj = lv_event_get_target_obj(e);
+    auto& event = Context::requestInstance().getEvent();
+    event.publish(Event::Id::BACK, nullptr);
+}
+
 void ScreenBase::setupHeader(std::string title)
 {
     ESP_UTILS_CHECK_NULL_EXIT(main_obj_, "main_obj is null");
@@ -63,6 +67,7 @@ void ScreenBase::setupHeader(std::string title)
     lv_obj_set_style_pad_right(header_obj_, 5, 0);
     lv_obj_add_flag(header_obj_, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_remove_flag(header_obj_, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_event_cb(header_obj_, onHeaderTouch, LV_EVENT_CLICKED, nullptr);
 
     auto* header_arrow = lv_img_create(header_obj_);
     lv_obj_set_size(header_arrow, IMG_WIDTH, IMG_HEIGTH);
