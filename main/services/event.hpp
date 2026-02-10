@@ -5,6 +5,7 @@
 
 // stl
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 
 // lvgl
@@ -17,6 +18,7 @@ public:
         ENTER,
         BACK,
         VALUECHANGE,
+        CUSTOM,
         MAX
     };
 
@@ -33,7 +35,9 @@ public:
     boost::signals2::connection subscribe(Id event_id, EventSignal::slot_type slot_fun);
     void publish(Id event_id, void* data = nullptr);
 
-
+    Id getFreeEventId();
 private:
     std::unordered_map<Id, EventSignal> event_map_;
+    Id free_event_id_ = Id::CUSTOM;
+    std::unordered_set<Id> available_event_ids_;
 };

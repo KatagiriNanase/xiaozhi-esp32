@@ -9,7 +9,7 @@
         .left_icon= &app_icon_brightness_less_48_48,\
         .left_main_text= "Brightness",\
         .right_icon= &app_icon_brightness_more_48_48,\
-        .type=CellType::VALUE \
+        .event_id=Event::Id::VALUECHANGE \
     }
 
 void ScreenDisplay::setupMain(lv_obj_t* parent)

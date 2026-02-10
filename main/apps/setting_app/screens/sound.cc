@@ -16,7 +16,7 @@
         .left_icon= &app_icon_sound_less_48_48,\
         .left_main_text= "Sound",\
         .right_icon= &app_icon_sound_more_48_48,\
-        .type=CellType::VALUE \
+        .event_id=Event::Id::VALUECHANGE \
     }
 
 void ScreenSound::setupMain(lv_obj_t* parent)

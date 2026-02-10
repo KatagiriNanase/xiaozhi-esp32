@@ -9,6 +9,8 @@
 #include <type_traits>
 #include <lvgl.h>
 
+#include "services/event.hpp"
+
 #define CELLCONTAINER_DEFAULT_CONFIG(parent_param, title_param) \
     ( \
         CellContainer::Config{ \
@@ -39,12 +41,6 @@ enum class CellElement :uint32_t {
     CENTER_SLIDER = (1U << 12)
 };
 
-enum CellType {
-    ENTER,
-    VALUE,
-    MAX
-};
-
 struct CellConf {
     // left area
     const lv_img_dsc_t* left_icon = nullptr;
@@ -61,7 +57,7 @@ struct CellConf {
     // slider
     int slider_value = 0;
 
-    CellType type;
+    Event::Id event_id;
 };
 
 inline CellElement operator|(CellElement l, CellElement r)
@@ -75,7 +71,6 @@ inline bool operator&(CellElement l, CellElement r)
         static_cast<std::underlying_type<CellElement>::type>(l) & static_cast<std::underlying_type<CellElement>::type>(r)
         );
 }
-
 
 class Cell {
 public:
@@ -92,7 +87,7 @@ public:
     lv_obj_t* getElementObj(CellElement cell_element);
     lv_obj_t* getObj(void);
     int getVal(void) { return val_; }
-    CellType getType(void) { return type_; }
+    Event::Id getEventId(void) { return event_id_; }
 
 private:
 
@@ -100,7 +95,7 @@ private:
     CellElement layout_mask_;
     lv_obj_t* main_obj_;
     lv_obj_t* split_line_ = nullptr;
-    CellType type_;
+    Event::Id event_id_;
     int val_;
     std::array<lv_point_precise_t, 2> split_line_points_ = { {
         {40, 0},

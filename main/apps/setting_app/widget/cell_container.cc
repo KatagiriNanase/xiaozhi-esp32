@@ -164,13 +164,16 @@ void Cell::setupRightArea(lv_obj_t* parent)
 
 void Cell::update(const CellConf& cell_conf)
 {
-    type_ = cell_conf.type;
     // click event
-    if (type_ == CellType::ENTER) {
+    if (cell_conf.event_id == Event::Id::ENTER || cell_conf.event_id == Event::Id::CUSTOM) {
+        if (cell_conf.event_id == Event::Id::CUSTOM)
+            event_id_ = Context::requestInstance().getEvent().getFreeEventId();
+        else
+            event_id_ = cell_conf.event_id;
         lv_obj_add_event_cb(main_obj_, onCellTouch, LV_EVENT_CLICKED, this);
     }
-
-    if (type_ == CellType::VALUE) {
+    else if (cell_conf.event_id == Event::Id::VALUECHANGE) {
+        event_id_ = cell_conf.event_id;
         lv_obj_t* target = nullptr;
         if (layout_mask_ & CellElement::CENTER_SLIDER)
             target = getElementObj(CellElement::CENTER_SLIDER);
@@ -247,19 +250,11 @@ lv_obj_t* Cell::getObj(void)
 
 void Cell::onCellTouch(lv_event_t* e)
 {
-    auto* obj = lv_event_get_target_obj(e);
-    auto code = lv_event_get_code(e);
+    // auto* obj = lv_event_get_target_obj(e);
+    // auto code = lv_event_get_code(e);
     auto* self = static_cast<Cell*>(lv_event_get_user_data(e));
     auto& event = Context::requestInstance().getEvent();
-    if (code == LV_EVENT_CLICKED && self->type_ == CellType::ENTER) {
-        // ESP_UTILS_LOGI("switch screen!");
-        event.publish(Event::Id::ENTER, self);
-    }
-    // slider_obj_
-    else if (code == LV_EVENT_VALUE_CHANGED && self->type_ == CellType::VALUE) {
-        self->val_ = static_cast<int>(lv_slider_get_value(obj));
-        event.publish(Event::Id::VALUECHANGE, self);
-    }
+    event.publish(self->getEventId(), self);
 }
 
 CellContainer::CellContainer(const Config& config)

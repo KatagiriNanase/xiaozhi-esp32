@@ -16,7 +16,7 @@
         .left_main_text= "Wlan",\
         .right_icon= &app_icon_arrow_right_48_48,\
         .right_main_text= "Off",\
-        .type=CellType::ENTER \
+        .event_id=Event::Id::ENTER \
     }
 
 #define SCREEN_SETTINGS_SOUND_CELL_DATA_CONFIG() \
@@ -24,7 +24,7 @@ CellConf{\
     .left_icon= &app_icon_media_sound_48_48,\
     .left_main_text= "Sound",\
     .right_icon= &app_icon_arrow_right_48_48,\
-    .type=CellType::ENTER \
+    .event_id=Event::Id::ENTER \
 }
 
 #define SCREEN_SETTINGS_DISPLAY_CELL_DATA_CONFIG() \
@@ -32,7 +32,7 @@ CellConf{\
     .left_icon= &app_icon_media_display_48_48,\
     .left_main_text= "Display",\
     .right_icon= &app_icon_arrow_right_48_48,\
-    .type=CellType::ENTER \
+    .event_id=Event::Id::ENTER \
 }
 
 #define SCREEN_SETTINGS_MORE_CELL_DATA_CONFIG() \
@@ -40,7 +40,14 @@ CellConf{\
     .left_icon= &app_icon_more_about_48_48,\
     .left_main_text= "More",\
     .right_icon= &app_icon_arrow_right_48_48,\
-    .type=CellType::ENTER \
+    .event_id=Event::Id::ENTER \
+}
+
+#define SCREEN_SETTINGS_RESTART_CELL_DATA_CONFIG() \
+CellConf{\
+    .left_icon= &app_icon_more_restart_48_48,\
+    .left_main_text= "Restart",\
+    .event_id=Event::Id::CUSTOM \
 }
 
 void ScreenSettings::setupMain(lv_obj_t* parent)
@@ -87,6 +94,9 @@ void ScreenSettings::setupAbout()
     auto* about = addContainer(static_cast<int>(ContainerIndex::MORE), CELLCONTAINER_DEFAULT_CONFIG(cont_obj_, "about"));
     auto* more_cell = about->addCell(static_cast<int>(CellIndex::ABOUT), SCREEN_SETTINGS_CELL_CONFIG());
     more_cell->update(SCREEN_SETTINGS_MORE_CELL_DATA_CONFIG());
+
+    auto* restart_cell = about->addCell(static_cast<int>(CellIndex::RESTART), CellElement::LEFT_ICON | CellElement::LEFT_MAIN_LABEL);
+    restart_cell->update(SCREEN_SETTINGS_RESTART_CELL_DATA_CONFIG());
 
 }
 

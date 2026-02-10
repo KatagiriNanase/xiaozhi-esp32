@@ -21,12 +21,14 @@ public:
         SOUND,
         DISPLAY,
         ABOUT,
+        RESTART,
         MAX
     };
     void setupMain(lv_obj_t* parent = nullptr) override;
-    
+
 private:
     void setupWireless();
     void setupMedia();
     void setupAbout();
+    void setupRestart();
 };

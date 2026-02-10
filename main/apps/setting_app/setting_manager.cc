@@ -38,8 +38,14 @@ void SettingManager::init()
         // 查表
         auto cell_val_it = cell_nvs_map_.find(cell);
         ESP_UTILS_CHECK_FALSE_EXIT(cell_val_it != cell_nvs_map_.end(), "cell not found in map!");
+        int val = lv_slider_get_value(cell->getElementObj(CellElement::CENTER_SLIDER));
+        nvs_service.setLocalParam(cell_val_it->second, val, cell);
+        });
 
-        nvs_service.setLocalParam(cell_val_it->second, cell->getVal(), cell);
+    // restart
+    auto* restart_cell = ui_.screen_settings_.getCell(ScreenSettings::ContainerIndex::MORE, ScreenSettings::CellIndex::RESTART);
+    event.subscribe(restart_cell->getEventId(), [this](void* data) {
+        esp_restart();
         });
 }
 
