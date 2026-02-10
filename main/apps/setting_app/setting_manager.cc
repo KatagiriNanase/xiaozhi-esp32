@@ -53,13 +53,26 @@ void SettingManager::run()
     auto* brightness_cell = ui_.screen_settings_.getCell(ScreenSettings::ContainerIndex::MEDIA, ScreenSettings::CellIndex::DISPLAY);
     bindCellToScreen(brightness_cell, ui_.screen_display_);
 
+    auto& nvs_service = NVSservice::requestInstance();
+
     // Sound Screen
     auto* sound_volume = ui_.screen_sound_.getCell(ScreenSound::ContainerIndex::VOLUME, ScreenSound::CellIndex::VOLUME_SLIDER);
     bindCellValue(sound_volume, NVSservice::SETTINGS_VOLUME);
 
+    auto* volume_slider = sound_volume->getElementObj(CellElement::CENTER_SLIDER);
+    NVSservice::Value val;
+    ESP_UTILS_CHECK_FALSE_EXIT(nvs_service.getLocalParam(NVSservice::SETTINGS_VOLUME, val), "get volume slider failed!");
+    ESP_UTILS_CHECK_FALSE_EXIT(std::holds_alternative<int>(val), "Invalid volume type!");
+    lv_slider_set_value(volume_slider, std::get<int>(val), LV_ANIM_OFF);
+
     // Display brightness
     auto* display_brightness = ui_.screen_display_.getCell(ScreenDisplay::ContainerIndex::BRIGHTNESS, ScreenDisplay::CellIndex::BRIGHTNESS_SLIDER);
     bindCellValue(display_brightness, NVSservice::SETTINGS_BRIGHTNESS);
+
+    auto* brightness_slider = display_brightness->getElementObj(CellElement::CENTER_SLIDER);
+    ESP_UTILS_CHECK_FALSE_EXIT(nvs_service.getLocalParam(NVSservice::SETTINGS_BRIGHTNESS, val), "get brightness val failed!");
+    ESP_UTILS_CHECK_FALSE_EXIT(std::holds_alternative<int>(val), "Invalid brightness slider type");
+    lv_slider_set_value(brightness_slider, std::get<int>(val), LV_ANIM_OFF);
 
 }
 

@@ -1,5 +1,6 @@
 #include "modules/bsp/service.hpp"
 #include "modules/bsp/display.hpp"
+#include "modules/bsp/audio.hpp"
 #include "boost/thread.hpp"
 #include "bsp/esp-bsp.h"
 #include "context.hpp"
@@ -17,6 +18,7 @@ extern "C" void app_main()
 
     services_init();
     display_init(false);
+    audio_init();
     auto& manager = Context::requestInstance().getManager();
     int setting_id;
     manager.installApp(std::make_unique<SettingApp>(), setting_id);

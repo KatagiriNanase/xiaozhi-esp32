@@ -5,6 +5,9 @@
 #include "event.hpp"
 #include "manager.hpp"
 
+ // audio
+#include "audio_codec.h"
+
 class Context {
 public:
     Context() = default;
@@ -22,10 +25,14 @@ public:
 
     Event& getEvent();
     Manager& getManager();
-    // 后续用Display代替
-    
+    AudioCodec* getAudioCodec();
+
+    bool setAudioCodec(AudioCodec* codec);
 
 private:
     Event event_;
     Manager manager_;
+
+    // audio 
+    AudioCodec* audio_codec_ = nullptr;
 };
