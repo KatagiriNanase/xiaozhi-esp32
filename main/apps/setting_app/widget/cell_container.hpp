@@ -120,6 +120,7 @@ public:
     int getCellIndex(lv_obj_t* obj) const;
     Cell* getCellbyIndex(int key) const;
     size_t getCellCount() const { return cells_.size(); }
+    lv_obj_t* getObj() { return main_obj_; }
 
 private:
     void setup(lv_obj_t* parent);

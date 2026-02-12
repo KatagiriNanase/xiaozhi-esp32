@@ -4,6 +4,7 @@
 #include "screens/settings.hpp"
 #include "screens/sound.hpp"
 #include "screens/display.hpp"
+#include "screens/wlan.hpp"
 
 class SettingManager;
 
@@ -19,4 +20,6 @@ private:
     ScreenSettings screen_settings_;
     ScreenSound screen_sound_;
     ScreenDisplay screen_display_;
+    ScreenWlan screen_wlan_;
+
 };

@@ -27,11 +27,19 @@ public:
     Cell* getCell(T_ContainerIndex container_key, T_CellIndex cell_key)
     {
         auto it = container_map_.find(static_cast<int>(container_key));
-        if (it == container_map_.end()) {
-            ESP_UTILS_LOGE("container[%d] not exist!",container_key);
-            return nullptr;
-        }
+        // if (it == container_map_.end()) {
+        //     ESP_UTILS_LOGE("container[%d] not exist!", container_key);
+        //     return nullptr;
+        // }
+        ESP_UTILS_CHECK_FALSE_RETURN(it != container_map_.end(), nullptr, "container[%d] not exist!");
         return it->second->getCellbyIndex(static_cast<int>(cell_key));
+    }
+    template <typename T_ContainerIndex>
+    CellContainer* getContainer(T_ContainerIndex container_key)
+    {
+        auto it = container_map_.find(static_cast<int>(container_key));
+        ESP_UTILS_CHECK_FALSE_RETURN(it != container_map_.end(), nullptr, "container[%d] not exist!");
+        return it->second.get();
     }
 
 protected:

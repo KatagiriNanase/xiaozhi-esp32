@@ -139,7 +139,10 @@ void Cell::setupRightArea(lv_obj_t* parent)
     // right switch
     if (layout_mask_ & CellElement::RIGHT_SWITCH) {
         right_switch_ = lv_switch_create(right_obj_);
-        lv_obj_set_size(right_switch_, 40, 20);
+        lv_obj_set_size(right_switch_, 70, 40);
+        lv_obj_set_style_bg_color(right_switch_, lv_color_hex(0xFF2381), LV_PART_INDICATOR | LV_STATE_CHECKED);
+        lv_obj_set_style_bg_color(right_switch_, lv_color_hex(0xE5E5E9), LV_PART_INDICATOR);
+        lv_obj_set_style_anim_time(right_switch_, 0, LV_PART_MAIN);
         element_map_[CellElement::RIGHT_SWITCH] = right_switch_;
     }
 
@@ -252,6 +255,7 @@ void Cell::onCellTouch(lv_event_t* e)
 {
     // auto* obj = lv_event_get_target_obj(e);
     // auto code = lv_event_get_code(e);
+    // ESP_UTILS_LOGI("Touch!");
     auto* self = static_cast<Cell*>(lv_event_get_user_data(e));
     auto& event = Context::requestInstance().getEvent();
     event.publish(self->getEventId(), self);
@@ -260,7 +264,7 @@ void Cell::onCellTouch(lv_event_t* e)
 CellContainer::CellContainer(const Config& config)
 {
     setup(config.parent);
-    setTitle(config.title.c_str());
+    setTitle((config.title[0] == '\0') ? nullptr : config.title.c_str());
 }
 
 CellContainer::~CellContainer()
